@@ -25,8 +25,9 @@ class Settings(BaseSettings):
     app_title: str = "Wing Aerodynamic Analyzer"
     app_version: str = "0.1.0"
 
-    # OpenAI / LLM Configuration
-    openai_api_key: str
+    # Embeddings Configuration
+    embedding_provider: Literal["openai", "local"] = "openai"
+    openai_api_key: str = ""
     embedding_model: str = "text-embedding-3-small"
     embedding_dimension: int = 1536
     

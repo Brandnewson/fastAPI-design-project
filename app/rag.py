@@ -51,13 +51,15 @@ class RAGEngine:
         """
         self.settings = settings
         
-        if not settings.openai_api_key:
-            raise ValueError(
-                "OPENAI_API_KEY must be configured. "
-                "Set it in .env file or environment variables."
-            )
-        
-        self.client = OpenAI(api_key=settings.openai_api_key)
+        if settings.embedding_provider == "openai":
+            if not settings.openai_api_key:
+                raise ValueError(
+                    "OPENAI_API_KEY must be configured when using OpenAI embeddings. "
+                    "Set it in .env file or switch to EMBEDDING_PROVIDER=local."
+                )
+            self.client = OpenAI(api_key=settings.openai_api_key)
+        else:
+            self.client = None
         self._chroma_client: Optional[chromadb.Client] = None
         self._collection = None
         logger.info("RAG Engine initialized")
@@ -98,7 +100,7 @@ class RAGEngine:
 
     def embed_text(self, text: str) -> list[float]:
         """
-        Embed text using OpenAI's embedding model.
+        Embed text using the configured embedding provider.
         
         Args:
             text: Text to embed
@@ -107,8 +109,11 @@ class RAGEngine:
             list[float]: Embedding vector
             
         Raises:
-            Exception: If OpenAI API call fails
+            Exception: If embedding call fails
         """
+        if self.settings.embedding_provider == "local":
+            return self._local_embed(text)
+
         try:
             response = self.client.embeddings.create(
                 input=text,
@@ -118,6 +123,23 @@ class RAGEngine:
         except Exception as e:
             logger.error(f"Embedding failed for text: {text[:50]}... Error: {e}")
             raise
+
+    def _local_embed(self, text: str) -> list[float]:
+        """
+        Generate a deterministic local embedding for offline development.
+
+        This is a simple hash-based embedding suitable for demos and tests.
+        It is NOT semantically meaningful like OpenAI embeddings.
+        """
+        import hashlib
+        import random
+
+        digest = hashlib.sha256(text.encode("utf-8")).digest()
+        seed = int.from_bytes(digest, "big")
+        rng = random.Random(seed)
+
+        dim = self.settings.embedding_dimension
+        return [rng.uniform(-1.0, 1.0) for _ in range(dim)]
 
     def add_airfoil(
         self,

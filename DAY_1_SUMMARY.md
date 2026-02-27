@@ -11,7 +11,7 @@ Your **Wing Aerodynamic Analyzer API** is fully scaffolded and ready for Week 1 
 ```
 fastAPI-design-project/
 ├── 📄 main.py                      # FastAPI app factory ✓
-├── 📦 pyproject.toml               # Poetry dependencies ✓
+├── 📦 pyproject.toml               # uv dependencies ✓
 ├── 🔐 .env.example                 # Config template ✓
 ├── 🚫 .gitignore                   # Git ignore rules ✓
 │
@@ -220,9 +220,8 @@ def test_optimize_wing_endpoint(): pass
 
 ```bash
 cd c:\Code\fastAPI-design-project
-pip install poetry
-poetry install
-poetry shell
+uv venv
+uv sync
 ```
 
 ### 2. Configure Environment
@@ -244,7 +243,7 @@ python scripts/load_data.py
 ### 4. Start Server
 
 ```bash
-poetry run uvicorn main:app --reload
+uv run uvicorn main:app --reload
 ```
 
 ### 5. Verify
@@ -339,7 +338,7 @@ Visit: http://localhost:8000/docs
 - Pydantic v2 (validation)
 - OpenAI (embeddings)
 - Chroma (vector DB)
-- Poetry (dependency management)
+- uv (dependency management)
 
 ---
 

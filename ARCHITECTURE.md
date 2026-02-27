@@ -12,7 +12,7 @@ fastAPI-design-project/
 ├── main.py                           # ← START HERE
 │   └── FastAPI app factory, lifespan management, route registration
 │
-├── pyproject.toml                    # Poetry dependencies & config
+├── pyproject.toml                    # uv dependencies & config
 ├── .env.example                      # Configuration template
 ├── .env                              # (LOCAL ONLY - not in git)
 │

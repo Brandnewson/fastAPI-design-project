@@ -5,9 +5,9 @@ A FastAPI-based REST API for analyzing front wing aerodynamic impact on downstre
 ## Quick Start
 
 ### Prerequisites
-- Python 3.10+
+- Python 3.10-3.13
 - OpenAI API key (for embeddings)
-- Poetry (for dependency management)
+- uv (for dependency management)
 
 ### 1. Setup Environment
 
@@ -20,9 +20,8 @@ cp .env.example .env
 ### 2. Install Dependencies
 
 ```bash
-pip install poetry
-poetry install
-poetry shell
+uv venv
+uv sync
 ```
 
 ### 3. Load Aerodynamic Data
@@ -34,7 +33,7 @@ python scripts/load_data.py
 ### 4. Run API Server
 
 ```bash
-poetry run uvicorn main:app --reload
+uv run uvicorn main:app --reload
 # API available at http://localhost:8000
 # Interactive docs at http://localhost:8000/docs
 ```
@@ -46,7 +45,7 @@ The codebase follows a clean, modular architecture:
 ```
 fastapi-wing-optimizer/
 ├── main.py                    # FastAPI app entry point
-├── pyproject.toml             # Dependencies (Poetry)
+├── pyproject.toml             # Dependencies (uv)
 ├── .env.example               # Configuration template
 ├── app/
 │   ├── models.py              # Pydantic schemas
@@ -87,21 +86,22 @@ fastapi-wing-optimizer/
 
 ## Environment Configuration
 
-Create `.env` from `.env.example` and add your OpenAI key:
+Create `.env` from `.env.example` and add your OpenAI key. For offline development, set `EMBEDDING_PROVIDER=local` to avoid API calls:
 
 ```bash
+EMBEDDING_PROVIDER=openai
 OPENAI_API_KEY=sk-your-key-here
 APP_ENV=development
 ```
 
 ## Getting Started
 
-1. `pip install poetry`
-2. `poetry install`
-3. `poetry shell`
+1. `uv venv`
+2. `uv sync`
+3. Optional: activate `.venv` if you prefer shell activation
 4. Copy `.env.example` to `.env` and add API key
 5. `python scripts/load_data.py`
-6. `poetry run uvicorn main:app --reload`
+6. `uv run uvicorn main:app --reload`
 7. Visit `http://localhost:8000/docs`
 
 ## Core Endpoints

@@ -16,28 +16,22 @@ You now have a fully architected FastAPI project with:
 
 ## Setup Instructions
 
-### Step 1: Install Poetry and Dependencies
+### Step 1: Install uv and Dependencies
 
 ```bash
 # Navigate to project
 cd c:\Code\fastAPI-design-project
 
-# Install Poetry (if not already installed)
-pip install poetry
-
 # Create virtual environment and install dependencies
-poetry install
-
-# Activate environment
-poetry shell
+uv venv
+uv sync
 ```
 
 **Expected output:**
 ```
-Creating virtualenv fastapi-design-project-py310
-Installing dependencies from lock file
-✓ Everything up to date
-Virtual environment activated
+Using Python 3.10-3.13
+Creating virtual environment at .venv
+Resolved and installed dependencies
 ```
 
 ### Step 2: Configure Environment
@@ -53,6 +47,9 @@ copy .env.example .env
 
 **Required for RAG to work:**
 - `OPENAI_API_KEY` - Your OpenAI API key (get one at https://platform.openai.com/api-keys)
+
+**Optional offline mode:**
+- Set `EMBEDDING_PROVIDER=local` to use local hash-based embeddings without API calls
 
 **Optional (have sensible defaults):**
 - `APP_ENV` - development/staging/production
@@ -93,7 +90,7 @@ python scripts/load_data.py
 
 ```bash
 # Start FastAPI development server with auto-reload
-poetry run uvicorn main:app --reload
+uv run uvicorn main:app --reload
 
 # You should see:
 # ✓ Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
@@ -270,7 +267,7 @@ curl http://localhost:8000/api/v1/health
 
 ### Run the API
 ```bash
-poetry run uvicorn main:app --reload
+uv run uvicorn main:app --reload
 ```
 
 ### Load data (after CSV changes)
@@ -289,13 +286,13 @@ pytest tests/test_api.py  # Specific file
 ### Check code style
 ```bash
 # Format code
-poetry run black app
+uv run black app
 
 # Sort imports
-poetry run isort app
+uv run isort app
 
 # Type checking (optional)
-poetry run mypy app
+uv run mypy app
 ```
 
 ### Clean environment
@@ -340,26 +337,26 @@ python scripts/load_data.py --csv-path ./data/uiuc_airfoils.csv
 **Solution:**
 ```bash
 # Use different port
-poetry run uvicorn main:app --reload --port 8001
+uv run uvicorn main:app --reload --port 8001
 ```
 
-### Issue: Poetry lock file conflicts
+### Issue: uv lock file conflicts
 
 **Solution:**
 ```bash
 # Regenerate lock file
-poetry lock --no-update
-poetry install
+uv lock --refresh
+uv sync
 ```
 
 ---
 
 ## Next Steps
 
-1. **Install dependencies:** `poetry install`
+1. **Install dependencies:** `uv sync`
 2. **Configure API key:** Update `.env` with your OpenAI key
 3. **Load data:** `python scripts/load_data.py`
-4. **Start server:** `poetry run uvicorn main:app --reload`
+4. **Start server:** `uv run uvicorn main:app --reload`
 5. **Visit docs:** http://localhost:8000/docs
 6. **Start building:** Implement RAG and MCP tools (Week 1)
 
